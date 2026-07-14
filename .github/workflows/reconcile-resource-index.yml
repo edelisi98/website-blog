@@ -1,0 +1,28 @@
+name: Reconcile resource index
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: resource-index-reconciliation
+  cancel-in-progress: false
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Rebuild the Webflow resource index
+        env:
+          REBUILD_SECRET: ${{ secrets.REBUILD_SECRET }}
+        run: |
+          test -n "$REBUILD_SECRET"
+          response="$(curl --fail-with-body --retry 3 --retry-all-errors --max-time 65 \
+            -X POST \
+            -H "Authorization: Bearer $REBUILD_SECRET" \
+            https://elire-consulting-01bc63.webflow.io/resource-api-v2/api/rebuild)"
+          printf '%s' "$response" | jq -e '.ok == true and .index.count > 0'

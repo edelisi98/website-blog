@@ -13,7 +13,9 @@ export async function GET() {
     configuration: {
       hasWebflowToken: Boolean(env.WEBFLOW_API_TOKEN),
       hasKvBinding: Boolean(env.RESOURCE_INDEX_KV),
-      hasWebhookSecret: Boolean(env.WEBFLOW_WEBHOOK_SECRET),
+      hasWebhookSecret: Boolean(
+        env.WEBFLOW_WEBHOOK_SECRET || env.WEBFLOW_WEBHOOK_SECRETS
+      ),
       hasRebuildSecret: Boolean(env.REBUILD_SECRET),
     },
     index: metadata,
