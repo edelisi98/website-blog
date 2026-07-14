@@ -24,12 +24,18 @@ export async function POST(request) {
     timestamp,
     signature,
     secret: env.WEBFLOW_WEBHOOK_SECRET,
+    secrets: env.WEBFLOW_WEBHOOK_SECRETS,
   });
   if (!isValid) {
     return Response.json({ ok: false, message: "Invalid signature." }, { status: 400 });
   }
 
-  const event = JSON.parse(body);
+  let event;
+  try {
+    event = JSON.parse(body);
+  } catch {
+    return Response.json({ ok: false, message: "Invalid JSON." }, { status: 400 });
+  }
   const siteId = event.payload?.siteId || event.siteId;
   if (siteId && siteId !== (env.WEBFLOW_SITE_ID || DEFAULT_SITE_ID)) {
     return Response.json({ ok: false, message: "Unexpected site." }, { status: 400 });

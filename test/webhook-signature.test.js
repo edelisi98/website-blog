@@ -58,3 +58,33 @@ test("rejects replayed webhook requests", async () => {
     false
   );
 });
+
+test("accepts any configured site webhook signing key", async () => {
+  const timestamp = "1784040000000";
+  const body = '{"triggerType":"collection_item_deleted"}';
+  const key = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode("second-webhook-secret"),
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+  const signature = hex(
+    await crypto.subtle.sign(
+      "HMAC",
+      key,
+      new TextEncoder().encode(`${timestamp}:${body}`)
+    )
+  );
+
+  assert.equal(
+    await verifyWebflowWebhook({
+      body,
+      timestamp,
+      signature,
+      secrets: "first-webhook-secret,second-webhook-secret\nthird-webhook-secret",
+      now: Number(timestamp) + 1000,
+    }),
+    true
+  );
+});

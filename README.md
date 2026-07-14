@@ -30,7 +30,7 @@ Configure these runtime variables in Webflow Cloud:
 
 - `WEBFLOW_API_TOKEN` — secret; CMS read access only is sufficient for index generation.
 - `WEBFLOW_SITE_ID` — `685d5960cbcc2c4cd8d6dced`.
-- `WEBFLOW_WEBHOOK_SECRET` — secret returned when the CMS webhook is created.
+- `WEBFLOW_WEBHOOK_SECRETS` — comma- or newline-separated signing keys returned by the CMS webhook registrations. `WEBFLOW_WEBHOOK_SECRET` remains supported for one-key setups.
 - `REBUILD_SECRET` — secret used to protect manual rebuild requests.
 
 Never place these values in Webflow page code, the public renderer, or committed files.
@@ -38,6 +38,8 @@ Never place these values in Webflow page code, the public renderer, or committed
 ## Index maintenance
 
 `POST /resource-api-v2/api/rebuild` refreshes the KV index when the request includes the configured rebuild secret. `POST /resource-api-v2/api/webhooks` validates Webflow's signed webhook and schedules the same rebuild.
+
+The GitHub Actions reconciliation workflow also calls the protected rebuild endpoint every six hours. Store the same rebuild value as the repository Actions secret named `REBUILD_SECRET`; never commit it to the workflow or repository.
 
 The pinned fallback can be refreshed from current live CMS content with:
 
