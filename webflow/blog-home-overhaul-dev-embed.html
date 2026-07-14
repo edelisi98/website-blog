@@ -1,0 +1,96 @@
+<div
+  data-resource-library
+  data-resource-endpoint="/resource-api-v2/api/resources"
+  data-resource-fallback="https://cdn.prod.website-files.com/685d5960cbcc2c4cd8d6dced/6a5678f752d5bf81a626b8f6_resource-index.fallback.json"
+>
+  <div class="static-resource-library_status">
+    <div aria-live="polite" data-resource-count>Loading resources...</div>
+    <button type="button" data-resource-clear>Clear filters</button>
+  </div>
+
+  <div
+    role="list"
+    class="collection-list w-dyn-items static-resource-library"
+    data-resource-results
+  ></div>
+
+  <div hidden class="static-resource-library_empty" data-resource-state="empty">
+    No resources match these filters.
+  </div>
+
+  <div class="static-resource-library_load">
+    <button hidden type="button" class="button" data-resource-load-more>
+      LOAD MORE
+    </button>
+  </div>
+
+  <div hidden role="listitem" class="w-dyn-item" data-resource-template="card">
+    <a data-resource-field="url" href="#" class="blog-post w-inline-block">
+      <div class="blog-post_img-container">
+        <img data-resource-field="image" src="" alt="" class="_16x9_fill" />
+      </div>
+
+      <div class="blog-item-pill-holder" data-resource-list="pills">
+        <div
+          hidden
+          class="blog-pill w-dyn-item"
+          style="background-color: #444"
+          data-resource-template="pill"
+          data-resource-pill-group="content-type"
+        >
+          <span class="blog-pill_label" data-resource-field="label"></span>
+        </div>
+        <div
+          hidden
+          class="blog-pill w-dyn-item"
+          style="background-color: #d3233a"
+          data-resource-template="pill"
+          data-resource-pill-group="topic"
+        >
+          <span class="blog-pill_label" data-resource-field="label"></span>
+        </div>
+        <div
+          hidden
+          class="blog-pill w-dyn-item"
+          style="background-color: #8b1523"
+          data-resource-template="pill"
+          data-resource-pill-group="industry"
+        >
+          <span class="blog-pill_label" data-resource-field="label"></span>
+        </div>
+      </div>
+
+      <div class="div-block-12">
+        <div class="posted-date" data-resource-field="date"></div>
+        <div class="posted-date">•</div>
+        <div data-resource-list="authors">
+          <span
+            hidden
+            class="author-blog-container w-dyn-item"
+            data-resource-template="author"
+          >
+            <span class="posted-date" data-resource-field="label"></span>
+          </span>
+        </div>
+      </div>
+
+      <div class="spacer-xsmall"></div>
+      <div class="heading-style-h5 blog-header" data-resource-field="title"></div>
+      <div class="spacer-small"></div>
+      <div class="text-size-small" data-resource-field="summary"></div>
+      <div class="spacer-tiny"></div>
+      <div class="blog-post_line"></div>
+      <div class="blog-post_link-container">
+        <div class="blog-post_link">Read the Blog Post</div>
+        <img
+          src="https://cdn.prod.website-files.com/685d5960cbcc2c4cd8d6dced/688a802efb559f040b708fbe_Arrow-right.svg"
+          loading="lazy"
+          alt=""
+          class="image-5"
+        />
+      </div>
+    </a>
+  </div>
+</div>
+
+<script type="module" src="/resource-api-v2/static-resource-library-v2.js"></script>

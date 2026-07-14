@@ -1,0 +1,940 @@
+[
+  {
+    "id": "6862fc7f9b12cc1975a81d08",
+    "name": "Blog Posts",
+    "slug": "blog",
+    "itemCount": 375,
+    "fields": [
+      {
+        "displayName": "Secondary Header",
+        "slug": "secondary-header",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Bodyhtml",
+        "slug": "bodyhtml",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Excerpts",
+        "slug": "excerpts",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date",
+        "slug": "date",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Thumbnails",
+        "slug": "thumbnails",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Background",
+        "slug": "images",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "688a6d6f4b7444fb03d974d0",
+    "name": "Webinars",
+    "slug": "webinars",
+    "itemCount": 121,
+    "fields": [
+      {
+        "displayName": "Bodyhtml",
+        "slug": "bodyhtml",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Videos",
+        "slug": "videos",
+        "type": "VideoLink",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date",
+        "slug": "date",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Thumbnail Image",
+        "slug": "thumbnail-image",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Excerpts",
+        "slug": "excerpts",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Client",
+        "slug": "client",
+        "type": "Reference",
+        "referenceCollectionId": "6892515d93fc7e1c6e3b4a3f"
+      },
+      {
+        "displayName": "Gated?",
+        "slug": "gated",
+        "type": "Switch",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "688a793d1a5888a9d732c677",
+    "name": "Case Studies",
+    "slug": "case-study",
+    "itemCount": 9,
+    "fields": [
+      {
+        "displayName": "Case Study",
+        "slug": "case-study",
+        "type": "File",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Client",
+        "slug": "client",
+        "type": "Reference",
+        "referenceCollectionId": "6892515d93fc7e1c6e3b4a3f"
+      },
+      {
+        "displayName": "Featured image",
+        "slug": "featured-image",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Body",
+        "slug": "body",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Excerpt",
+        "slug": "excerpt",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Thumbnails",
+        "slug": "thumbnails",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date",
+        "slug": "date",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Service",
+        "slug": "service",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5b1ca942236e02bd804f"
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "6892503ee90a06f9c1c0bbed",
+    "name": "White Papers",
+    "slug": "white-paper",
+    "itemCount": 4,
+    "fields": [
+      {
+        "displayName": "Subtitle",
+        "slug": "subtitle",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Featured Image",
+        "slug": "featured-image",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Body",
+        "slug": "body",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "White Paper",
+        "slug": "white-paper",
+        "type": "File",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Excerpt",
+        "slug": "excerpt",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Thumbnails",
+        "slug": "thumbnails",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date",
+        "slug": "date",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "6892516f71708cd226fa878e",
+    "name": "Success Stories",
+    "slug": "success-stories",
+    "itemCount": 131,
+    "fields": [
+      {
+        "displayName": "Clients",
+        "slug": "clients",
+        "type": "Reference",
+        "referenceCollectionId": "6892515d93fc7e1c6e3b4a3f"
+      },
+      {
+        "displayName": "Excerpts",
+        "slug": "excerpts",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Body",
+        "slug": "body",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories-2",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Service",
+        "slug": "service",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date Published",
+        "slug": "date-published",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Featured Image",
+        "slug": "featured-image",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Youtube Link - Success Story Video",
+        "slug": "youtube-link---success-story-video",
+        "type": "VideoLink",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "68926668fbd01e25e57ca330",
+    "name": "Press Releases",
+    "slug": "press-release",
+    "itemCount": 8,
+    "fields": [
+      {
+        "displayName": "Images",
+        "slug": "images",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Bodyhtml",
+        "slug": "bodyhtml",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Excerpts",
+        "slug": "excerpts",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Thumbnails",
+        "slug": "thumbnails",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date",
+        "slug": "date",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "6892667f50d85a524bf59ac2",
+    "name": "Demos",
+    "slug": "demos",
+    "itemCount": 52,
+    "fields": [
+      {
+        "displayName": "Video link",
+        "slug": "video-link",
+        "type": "VideoLink",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Rich text",
+        "slug": "rich-text",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Featured image",
+        "slug": "featured-image",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date",
+        "slug": "date",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Excerpt",
+        "slug": "excerpt",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "6894fc46ac05ef3123e3dcf3",
+    "name": "EBooks",
+    "slug": "ebooks",
+    "itemCount": 7,
+    "fields": [
+      {
+        "displayName": "Featured Image",
+        "slug": "featured-image",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Body",
+        "slug": "body",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Excerpt",
+        "slug": "excerpt",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Thumbnail",
+        "slug": "thumbnail",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date",
+        "slug": "date",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Service",
+        "slug": "service",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5b1ca942236e02bd804f"
+      },
+      {
+        "displayName": "eBook",
+        "slug": "ebook",
+        "type": "File",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "68a4e3453caec9e90bb2341b",
+    "name": "Infographics",
+    "slug": "infographics",
+    "itemCount": 8,
+    "fields": [
+      {
+        "displayName": "Bodyhtml",
+        "slug": "bodyhtml",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Excerpts",
+        "slug": "excerpts",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Date",
+        "slug": "date",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Thumbnails",
+        "slug": "thumbnails",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Background Image",
+        "slug": "background-image",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "6a29cabf418982bf6bea4d72",
+    "name": "Podcasts",
+    "slug": "podcast",
+    "itemCount": 4,
+    "fields": [
+      {
+        "displayName": "Date Published",
+        "slug": "date-published",
+        "type": "DateTime",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Tags",
+        "slug": "tags",
+        "type": "MultiReference",
+        "referenceCollectionId": "687ea3bad2ca224233426116"
+      },
+      {
+        "displayName": "Categories",
+        "slug": "categories",
+        "type": "MultiReference",
+        "referenceCollectionId": "68641d1b70dcaff6e13acc3c"
+      },
+      {
+        "displayName": "Authors",
+        "slug": "authors",
+        "type": "MultiReference",
+        "referenceCollectionId": "685d5aa7c3ca64d7889d4ac6"
+      },
+      {
+        "displayName": "Rich Text",
+        "slug": "rich-text",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Thumbnail from Spotify",
+        "slug": "thumbnail-from-spotify",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Link to Episode",
+        "slug": "link-to-episode",
+        "type": "Link",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Meta",
+        "slug": "meta",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Excerpt",
+        "slug": "excerpt",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Thumbnail (Blog)",
+        "slug": "thumbnail-blog",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "68641d1b70dcaff6e13acc3c",
+    "name": "Blog Sub Categories",
+    "slug": "blog-sub-categories",
+    "itemCount": 54,
+    "fields": [
+      {
+        "displayName": "Main Category",
+        "slug": "main-category",
+        "type": "Reference",
+        "referenceCollectionId": "68641b276d39c3fa1086bea8"
+      },
+      {
+        "displayName": "Reference Color",
+        "slug": "reference-color",
+        "type": "Color",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "685d5aa7c3ca64d7889d4ac6",
+    "name": "Authors",
+    "slug": "author",
+    "itemCount": 41,
+    "fields": [
+      {
+        "displayName": "Bio",
+        "slug": "bio",
+        "type": "RichText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Bio Summary",
+        "slug": "bio-summary",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Picture",
+        "slug": "picture",
+        "type": "Image",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Email",
+        "slug": "email",
+        "type": "Email",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "LinkedIn Link",
+        "slug": "linkedin-link",
+        "type": "Link",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "COE Color",
+        "slug": "coe-color",
+        "type": "Color",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Job Title",
+        "slug": "job-title",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  },
+  {
+    "id": "68641b276d39c3fa1086bea8",
+    "name": "Blog Categories",
+    "slug": "blog-category",
+    "itemCount": 3,
+    "fields": [
+      {
+        "displayName": "Content Name",
+        "slug": "content-name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Name",
+        "slug": "name",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      },
+      {
+        "displayName": "Slug",
+        "slug": "slug",
+        "type": "PlainText",
+        "referenceCollectionId": null
+      }
+    ]
+  }
+]

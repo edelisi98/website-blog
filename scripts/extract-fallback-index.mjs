@@ -1,0 +1,22 @@
+import { readFile, mkdir, writeFile } from "node:fs/promises";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+import { legacyIndexToV2, validateResourceIndex } from "../lib/normalize.js";
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
+const bundlePath = resolve(root, "static-resource-library.bundle.js");
+const outputPath = resolve(root, "data/resource-index.fallback.json");
+const bundle = await readFile(bundlePath, "utf8");
+const prefix = "window.__ELIRE_RESOURCE_INDEX__=";
+const start = bundle.indexOf(prefix);
+if (start < 0) throw new Error("Legacy resource index was not found in the bundle.");
+const valueStart = start + prefix.length;
+const valueEnd = bundle.indexOf(";\n(() =>", valueStart);
+if (valueEnd < 0) throw new Error("Legacy resource index terminator was not found.");
+const legacy = JSON.parse(bundle.slice(valueStart, valueEnd));
+const converted = legacyIndexToV2(legacy);
+const validation = validateResourceIndex(converted);
+if (!validation.ok) throw new Error(validation.errors.join("\n"));
+await mkdir(dirname(outputPath), { recursive: true });
+await writeFile(outputPath, `${JSON.stringify(converted)}\n`);
+console.log(`Wrote ${converted.count} resources to ${outputPath}`);
