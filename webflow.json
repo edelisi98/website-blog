@@ -1,8 +1,14 @@
 {
-  "siteId": "685d5960cbcc2c4cd8d6dced",
   "cloud": {
-    "framework": "nextjs"
+    "contract_version": "1",
+    "framework": "nextjs",
+    "framework_version": "15.5.18",
+    "entrypoint_path": "./worker.js",
+    "deployment_type": "ssr",
+    "skip_no_bundle": false,
+    "app_id": "cd8a8a62-f7d8-49a5-9128-c53ef0aab11e"
   },
+  "siteId": "685d5960cbcc2c4cd8d6dced",
   "telemetry": {
     "global": {
       "allowTelemetry": false

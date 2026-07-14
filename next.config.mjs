@@ -2,7 +2,7 @@ import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 initOpenNextCloudflareForDev();
 
-const basePath = process.env.BASE_URL || "/resource-api";
+const basePath = process.env.BASE_URL || "/resource-api-v2";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {

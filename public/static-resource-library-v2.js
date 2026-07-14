@@ -88,6 +88,7 @@ const formatDate = (isoDate) =>
     year: "numeric",
     month: "long",
     day: "numeric",
+    timeZone: "UTC",
   }).format(new Date(isoDate));
 
 const populateImage = (card, item, position) => {

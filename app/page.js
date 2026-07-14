@@ -4,10 +4,10 @@ export default function Page() {
       <h1>Elire Resource API</h1>
       <p>This private synchronization helper is running.</p>
       <p>
-        Health: <code>/resource-api/api/health</code>
+        Health: <code>/resource-api-v2/api/health</code>
       </p>
       <p>
-        Public resource index: <code>/resource-api/api/resources</code>
+        Public resource index: <code>/resource-api-v2/api/resources</code>
       </p>
     </main>
   );

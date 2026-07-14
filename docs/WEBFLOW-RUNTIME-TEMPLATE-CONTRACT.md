@@ -6,7 +6,7 @@ The renderer never creates card, chip, pill, grid, button, or state markup. It c
 
 Add `data-resource-library` to the resource library wrapper, plus:
 
-- `data-resource-endpoint="/resource-api/api/resources"`
+- `data-resource-endpoint="/resource-api-v2/api/resources"`
 - `data-resource-fallback="PINNED_FALLBACK_JSON_URL"`
 
 ## Required Webflow elements

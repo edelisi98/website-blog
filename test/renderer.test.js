@@ -86,6 +86,7 @@ test("renders 24 cards, filters, chips, clears, and loads more", async () => {
 
   assert.equal(root.querySelectorAll("[data-resource-id]").length, 24);
   assert.equal(root.querySelector("[data-resource-count]").textContent, "50 resources");
+  assert.equal(root.querySelector('[data-resource-field="date"]').textContent, "July 14, 2026");
   root.querySelector("[data-resource-load-more]").click();
   assert.equal(root.querySelectorAll("[data-resource-id]").length, 48);
 
