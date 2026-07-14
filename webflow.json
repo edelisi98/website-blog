@@ -1,0 +1,11 @@
+{
+  "siteId": "685d5960cbcc2c4cd8d6dced",
+  "cloud": {
+    "framework": "nextjs"
+  },
+  "telemetry": {
+    "global": {
+      "allowTelemetry": false
+    }
+  }
+}

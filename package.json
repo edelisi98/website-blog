@@ -1,14 +1,27 @@
 {
   "name": "website-blog-resource-api",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "preview": "opennextjs-cloudflare build && opennextjs-cloudflare preview",
+    "test": "node --test",
+    "fallback:extract": "node scripts/extract-fallback-index.mjs",
+    "fallback:live": "node scripts/build-live-fallback.mjs",
+    "cms:inspect": "node scripts/inspect-cms.mjs"
   },
   "dependencies": {
-    "next": "15.3.4",
+    "@opennextjs/cloudflare": "1.20.1",
+    "next": "15.5.18",
     "react": "19.0.0",
     "react-dom": "19.0.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260714.1",
+    "@webflow/webflow-cli": "^2.1.1",
+    "jsdom": "^26.1.0",
+    "wrangler": "^4.25.0"
   }
 }

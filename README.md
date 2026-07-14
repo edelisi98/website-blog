@@ -1,28 +1,48 @@
-# Elire Resource API
+# Elire Resource Library
 
-This repo hosts the JavaScript bundle used by the Webflow Blog Home copy and
-will also host a tiny Webflow Cloud API app.
+This repository contains the read-only resource index service and lightweight browser renderer for the Elire Webflow Resource Hub.
 
-## Test endpoint
+Webflow remains the source of truth for CMS content and visual styling. The service reads ten live Webflow collections on the server, normalizes them into one newest-first index, stores the active index in Webflow Cloud KV, and exposes a public read-only JSON endpoint. The browser initially clones 24 cards from the hidden Webflow template and supports the existing filters, selected chips, result count, Clear Filters, and Load More behavior.
 
-After deploying to Webflow Cloud, visit:
+## Local verification
 
-```txt
-/api/resources
+```sh
+npm install
+npm test
+npx opennextjs-cloudflare build
+npx opennextjs-cloudflare preview
 ```
 
-If the app path is set to `/resource-api`, the full path will be:
+The production-style local endpoints are:
 
 ```txt
-/resource-api/api/resources
+http://localhost:8787/resource-api/api/health
+http://localhost:8787/resource-api/api/resources
 ```
 
-## Environment variables
+Without secrets, `/api/resources` intentionally serves the pinned fallback index.
 
-Later, add this environment variable in Webflow Cloud:
+## Webflow Cloud configuration
 
-```txt
-WEBFLOW_API_TOKEN
+The app mounts at `/resource-api` and uses the `RESOURCE_INDEX_KV` binding declared in `wrangler.json`.
+
+Configure these runtime variables in Webflow Cloud:
+
+- `WEBFLOW_API_TOKEN` — secret; CMS read access only is sufficient for index generation.
+- `WEBFLOW_SITE_ID` — `685d5960cbcc2c4cd8d6dced`.
+- `WEBFLOW_WEBHOOK_SECRET` — secret returned when the CMS webhook is created.
+- `REBUILD_SECRET` — secret used to protect manual rebuild requests.
+
+Never place these values in Webflow page code, the public renderer, or committed files.
+
+## Index maintenance
+
+`POST /resource-api/api/rebuild` refreshes the KV index when the request includes the configured rebuild secret. `POST /resource-api/api/webhooks` validates Webflow's signed webhook and schedules the same rebuild.
+
+The pinned fallback can be refreshed from current live CMS content with:
+
+```sh
+npm run fallback:live
 ```
 
-Do not paste the token into Webflow page custom code.
+See `docs/CMS-FIELD-MAPPING.md` for the audited collection map and `docs/WEBFLOW-RUNTIME-TEMPLATE-CONTRACT.md` for the markup hooks.
