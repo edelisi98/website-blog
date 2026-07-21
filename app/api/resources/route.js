@@ -1,15 +1,21 @@
-import fallbackIndex from "../../../data/resource-index.fallback.json";
+import fallbackIndex from "../../../data/resource-index.fallback.json" with {
+  type: "json",
+};
 import { getRuntimeEnv } from "../../../lib/runtime-env.js";
 import { readStoredIndex } from "../../../lib/index-store.js";
 import { validateResourceIndex } from "../../../lib/normalize.js";
+import { sha256Hex } from "../../../lib/resource-index.js";
 
 export const dynamic = "force-dynamic";
 
-const responseHeaders = (source) => ({
+const responseHeaders = (source, etag = null) => ({
   "content-type": "application/json; charset=utf-8",
   "x-elire-resource-source": source,
   "x-content-type-options": "nosniff",
   "access-control-allow-origin": "https://www.elire.com",
+  "cache-control":
+    "public, max-age=60, s-maxage=300, stale-while-revalidate=3600",
+  ...(etag ? { etag } : {}),
 });
 
 export async function GET(request) {
@@ -33,8 +39,17 @@ export async function GET(request) {
     );
   }
 
-  return new Response(JSON.stringify(index), {
+  const serialized = JSON.stringify(index);
+  const etag = `"${await sha256Hex(serialized)}"`;
+  if (request.headers.get("if-none-match") === etag) {
+    return new Response(null, {
+      status: 304,
+      headers: responseHeaders(source, etag),
+    });
+  }
+
+  return new Response(serialized, {
     status: 200,
-    headers: responseHeaders(source),
+    headers: responseHeaders(source, etag),
   });
 }

@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { JSDOM } from "jsdom";
 import {
   createResourceLibrary,
+  enhanceFilterTabs,
   matchesFilters,
 } from "../public/static-resource-library-v2.js";
 
@@ -30,6 +31,7 @@ const makeItem = (index) => ({
 
 const markup = `
   <main data-resource-library data-resource-endpoint="/api" data-resource-fallback="/fallback">
+    <input type="search" data-resource-search>
     <div data-resource-filter-group="topic">
       <label><input type="checkbox" data-resource-filter-value="PeopleSoft">PeopleSoft</label>
       <label><input type="checkbox" data-resource-filter-value="Oracle Cloud ERP">Oracle Cloud ERP</label>
@@ -37,19 +39,22 @@ const markup = `
     <div data-resource-filter-group="industry">
       <label><input type="checkbox" data-resource-filter-value="Healthcare">Healthcare</label>
     </div>
-    <button data-resource-clear>Clear</button>
+    <button hidden disabled data-resource-clear>Clear</button>
     <span data-resource-count></span>
+    <span data-resource-announcement></span>
     <div data-resource-active-filters></div>
     <button hidden data-resource-template="chip"><span data-resource-field="label"></span></button>
     <p data-resource-state="loading">Loading</p>
     <p hidden data-resource-state="empty">Empty</p>
     <p hidden data-resource-state="error">Error</p>
     <p hidden data-resource-state="fallback">Fallback</p>
+    <button data-resource-retry>Retry</button>
     <div data-resource-results></div>
     <button data-resource-load-more>Load More</button>
     <article hidden data-resource-template="card">
-      <a data-resource-field="url"><img data-resource-field="image"><h2 data-resource-field="title"></h2></a>
+      <a data-resource-field="url"><span data-resource-field="image-container"><img data-resource-field="image"></span><h2 data-resource-field="title"></h2><span data-resource-field="cta"></span></a>
       <time data-resource-field="date"></time>
+      <span data-resource-field="author-separator">•</span>
       <p data-resource-field="summary"></p>
       <div data-resource-list="authors"><span hidden data-resource-template="author"><span data-resource-field="label"></span></span></div>
       <div data-resource-list="topics"><span hidden data-resource-template="pill" data-resource-pill-group="topic"><span data-resource-field="label"></span></span></div>
@@ -74,9 +79,29 @@ test("same-group filters use OR and cross-group filters use AND", () => {
   assert.equal(matchesFilters(makeItem(3), selected), false);
 });
 
+test("exposes filter state and selected counts on Webflow tab controls", () => {
+  const dom = new JSDOM(`
+    <a role="tab" aria-selected="true" aria-controls="topic-panel">
+      <span class="tab-content"><span>Topic</span><span class="expand">+</span></span>
+    </a>
+    <div id="topic-panel" role="tabpanel">
+      <input type="checkbox" checked>
+      <input type="checkbox">
+    </div>
+  `);
+  const { document } = dom.window;
+
+  enhanceFilterTabs(document);
+
+  const tab = document.querySelector('[role="tab"]');
+  assert.equal(tab.getAttribute("aria-expanded"), "true");
+  assert.equal(tab.querySelector(".tab-content > :first-child").textContent, "Topic (1)");
+});
+
 test("renders 24 cards, filters, chips, clears, and loads more", async () => {
   const dom = new JSDOM(markup, { url: "https://www.elire.com/blog-home-overhaul-dev" });
   installDomGlobals(dom.window);
+  dom.window.dataLayer = [];
   const items = Array.from({ length: 50 }, (_, index) => makeItem(index));
   globalThis.fetch = async () =>
     new Response(JSON.stringify({ schemaVersion: 2, count: items.length, items }));
@@ -84,21 +109,123 @@ test("renders 24 cards, filters, chips, clears, and loads more", async () => {
   const library = createResourceLibrary(root);
   await library.load();
 
+  assert.equal(dom.window.dataLayer[0].event, "resource_hub_loaded");
+  assert.equal(dom.window.dataLayer[0].resource_count, 50);
+
   assert.equal(root.querySelectorAll("[data-resource-id]").length, 24);
-  assert.equal(root.querySelector("[data-resource-count]").textContent, "50 resources");
+  assert.equal(
+    root.querySelector("[data-resource-count]").textContent,
+    "Showing 24 of 50 resources"
+  );
+  assert.equal(root.querySelector("[data-resource-clear]").hidden, true);
   assert.equal(root.querySelector('[data-resource-field="date"]').textContent, "July 14, 2026");
   root.querySelector("[data-resource-load-more]").click();
   assert.equal(root.querySelectorAll("[data-resource-id]").length, 48);
+  assert.equal(
+    root.querySelector("[data-resource-announcement]").textContent,
+    "Loaded 24 more resources. Showing 48 of 50."
+  );
+  assert.equal(
+    dom.window.dataLayer.at(-1).event,
+    "resource_hub_load_more"
+  );
 
   const peopleSoft = root.querySelector('[data-resource-filter-value="PeopleSoft"]');
   peopleSoft.checked = true;
   peopleSoft.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
-  assert.equal(root.querySelector("[data-resource-count]").textContent, "25 resources");
+  assert.equal(
+    root.querySelector("[data-resource-count]").textContent,
+    "Showing 24 of 25 resources"
+  );
+  assert.equal(root.querySelector("[data-resource-clear]").hidden, false);
   assert.equal(root.querySelectorAll("[data-resource-filter-remove]").length, 1);
+  assert.equal(
+    dom.window.dataLayer.at(-1).event,
+    "resource_hub_filter_change"
+  );
 
   root.querySelector("[data-resource-clear]").click();
-  assert.equal(root.querySelector("[data-resource-count]").textContent, "50 resources");
+  assert.equal(
+    root.querySelector("[data-resource-count]").textContent,
+    "Showing 24 of 50 resources"
+  );
+  assert.equal(root.querySelector("[data-resource-clear]").hidden, true);
   assert.equal(root.querySelectorAll("[data-resource-id]").length, 24);
+  assert.equal(dom.window.dataLayer.at(-1).event, "resource_hub_clear");
+
+  const search = root.querySelector("[data-resource-search]");
+  search.value = "Resource 49";
+  search.dispatchEvent(new dom.window.Event("input", { bubbles: true }));
+  assert.equal(root.querySelectorAll("[data-resource-id]").length, 1);
+  assert.equal(
+    root.querySelector("[data-resource-count]").textContent,
+    "Showing 1 of 1 resource"
+  );
+  await new Promise((resolve) => dom.window.setTimeout(resolve, 400));
+  assert.equal(dom.window.dataLayer.at(-1).event, "resource_hub_search");
+
+  const cardLink = root.querySelector(
+    '[data-resource-id] a[data-resource-field="url"]'
+  );
+  cardLink.addEventListener("click", (event) => event.preventDefault());
+  cardLink.dispatchEvent(
+    new dom.window.MouseEvent("click", { bubbles: true, cancelable: true })
+  );
+  assert.equal(dom.window.dataLayer.at(-1).event, "resource_hub_card_click");
+});
+
+test("uses contextual CTAs and hides incomplete card metadata cleanly", async () => {
+  const dom = new JSDOM(markup, {
+    url: "https://www.elire.com/blog-home-overhaul-dev",
+  });
+  installDomGlobals(dom.window);
+  const podcast = {
+    ...makeItem(1),
+    contentType: "Podcast",
+    contentTypes: ["Podcast"],
+    image: null,
+    authors: [],
+  };
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ schemaVersion: 2, count: 1, items: [podcast] }));
+  const root = document.querySelector("[data-resource-library]");
+  const library = createResourceLibrary(root);
+  await library.load();
+
+  const card = root.querySelector("[data-resource-id]");
+  assert.equal(card.querySelector('[data-resource-field="cta"]').textContent, "Listen to the Podcast");
+  assert.equal(card.querySelector('[data-resource-field="image-container"]').hidden, true);
+  assert.equal(card.querySelector('[data-resource-field="author-separator"]').hidden, true);
+  assert.equal(card.querySelector('[data-resource-field="title"]').tagName, "H2");
+  assert.equal(
+    card.querySelector('a[data-resource-field="url"]').getAttribute("aria-labelledby"),
+    card.querySelector('[data-resource-field="title"]').id
+  );
+});
+
+test("restores and shares search and filter state through the URL", async () => {
+  const dom = new JSDOM(markup, {
+    url: "https://www.elire.com/blog-home?q=Resource+1&topic=peoplesoft",
+  });
+  installDomGlobals(dom.window);
+  const items = [makeItem(1), makeItem(2), makeItem(11)];
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ schemaVersion: 2, count: items.length, items }));
+  const root = document.querySelector("[data-resource-library]");
+  const library = createResourceLibrary(root);
+  await library.load();
+
+  assert.equal(root.querySelector("[data-resource-search]").value, "Resource 1");
+  assert.equal(
+    root.querySelector('[data-resource-filter-value="PeopleSoft"]').checked,
+    true
+  );
+  assert.equal(root.querySelectorAll("[data-resource-id]").length, 2);
+
+  root.querySelector("[data-resource-clear]").click();
+  assert.equal(dom.window.location.search, "");
+  assert.equal(root.querySelector("[data-resource-search]").value, "");
+  assert.equal(root.querySelectorAll("[data-resource-id]").length, 3);
 });
 
 test("uses the pinned fallback when the API fails", async () => {
@@ -132,7 +259,7 @@ test("supports the existing external Finsweet filters and Webflow chip template"
         <button fs-list-element="tag-remove" type="button">Remove</button>
       </div>
       <main data-resource-library data-resource-endpoint="/api">
-        <button data-resource-clear>Clear</button>
+        <button hidden disabled data-resource-clear>Clear</button>
         <span data-resource-count></span>
         <div data-resource-results></div>
         <button data-resource-load-more>Load More</button>
@@ -163,7 +290,10 @@ test("supports the existing external Finsweet filters and Webflow chip template"
   const input = document.querySelector('[fs-list-value="PeopleSoft"]');
   input.checked = true;
   input.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
-  assert.equal(root.querySelector("[data-resource-count]").textContent, "1 resource");
+  assert.equal(
+    root.querySelector("[data-resource-count]").textContent,
+    "Showing 1 of 1 resource"
+  );
   assert.equal(input.closest("label").classList.contains("is-active"), true);
   const chip = document.querySelector('[fs-list-element="tag"]');
   assert.equal(chip.hidden, false);
@@ -174,5 +304,8 @@ test("supports the existing external Finsweet filters and Webflow chip template"
 
   chip.querySelector('[fs-list-element="tag-remove"]').click();
   assert.equal(input.checked, false);
-  assert.equal(root.querySelector("[data-resource-count]").textContent, "2 resources");
+  assert.equal(
+    root.querySelector("[data-resource-count]").textContent,
+    "Showing 2 of 2 resources"
+  );
 });

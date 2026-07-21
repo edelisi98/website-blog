@@ -15,7 +15,9 @@ const snapshot = await loadWebflowSnapshot({
   siteId: process.env.WEBFLOW_SITE_ID || DEFAULT_SITE_ID,
   token,
 });
-const build = await buildResourceIndex(snapshot);
+const build = await buildResourceIndex(snapshot, new Date(), {
+  imageFetchImpl: fetch,
+});
 const outputPath = resolve("data/resource-index.fallback.json");
 await writeFile(outputPath, `${JSON.stringify(build.index, null, 2)}\n`);
 console.log(
