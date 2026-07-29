@@ -2,7 +2,9 @@ import { getRuntimeEnv } from "../../../lib/runtime-env.js";
 import { rebuildResourceIndex } from "../../../lib/sync-service.js";
 
 export const dynamic = "force-dynamic";
-export const maxDuration = 60;
+// Webflow Cloud has a 20-second request timeout. Shared rebuild code uses a
+// shorter internal budget so this route can still return a structured error.
+export const maxDuration = 19;
 
 const authorized = (request, secret) => {
   const authorization = request.headers.get("authorization") || "";
@@ -17,7 +19,11 @@ export async function POST(request) {
 
   try {
     const result = await rebuildResourceIndex(env);
-    return Response.json({ ok: true, index: result.metadata });
+    return Response.json({
+      ok: true,
+      index: result.metadata,
+      imageEnrichment: result.imageEnrichment,
+    });
   } catch (error) {
     console.error("Resource index rebuild failed.", error);
     return Response.json(

@@ -15,14 +15,51 @@ concurrency:
 jobs:
   reconcile:
     runs-on: ubuntu-latest
+    timeout-minutes: 4
     steps:
       - name: Rebuild the Webflow resource index
         env:
           REBUILD_SECRET: ${{ secrets.REBUILD_SECRET }}
         run: |
           test -n "$REBUILD_SECRET"
-          response="$(curl --fail-with-body --retry 3 --retry-all-errors --max-time 65 \
-            -X POST \
-            -H "Authorization: Bearer $REBUILD_SECRET" \
-            https://elire-consulting-01bc63.webflow.io/resource-api-v2/api/rebuild)"
-          printf '%s' "$response" | jq -e '.ok == true and .index.count > 0'
+          endpoint="https://elire-consulting-01bc63.webflow.io/resource-api-v2/api/rebuild"
+          response_file="$(mktemp)"
+          trap 'rm -f "$response_file"' EXIT
+
+          for attempt in 1 2 3 4; do
+            : > "$response_file"
+            curl_status=0
+            http_status="$(
+              curl --silent --show-error \
+                --connect-timeout 10 \
+                --max-time 19 \
+                --output "$response_file" \
+                --write-out '%{http_code}' \
+                -X POST \
+                -H "Accept: application/json" \
+                -H "Authorization: Bearer $REBUILD_SECRET" \
+                "$endpoint"
+            )" || curl_status=$?
+
+            if [ "$curl_status" -eq 0 ] &&
+              [ "$http_status" = "200" ] &&
+              jq -e '.ok == true and .index.count > 0' "$response_file" >/dev/null
+            then
+              jq -c \
+                '{ok, index, imageEnrichment}' \
+                "$response_file"
+              exit 0
+            fi
+
+            printf 'Rebuild attempt %d failed (curl exit %d, HTTP %s). Response preview:\n' \
+              "$attempt" "$curl_status" "${http_status:-000}"
+            head -c 500 "$response_file" || true
+            printf '\n'
+
+            if [ "$attempt" -lt 4 ]; then
+              sleep 20
+            fi
+          done
+
+          printf 'Resource index rebuild failed after 4 attempts.\n' >&2
+          exit 1
