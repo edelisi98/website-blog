@@ -44,6 +44,11 @@ const MOBILE_FILTER_SHEET_STYLES = `
       -webkit-overflow-scrolling: touch;
     }
 
+    .blog-home_header-tabs.mobile.is-mobile-filter-open
+      .blog-sort_filters:not(.is-active) {
+      color: #111;
+    }
+
     .resource-mobile-filter_backdrop {
       position: fixed;
       z-index: 10000;
