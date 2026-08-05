@@ -3,6 +3,329 @@ const DEFAULTS = {
   timeoutMs: 8000,
 };
 
+const MOBILE_FILTER_SHEET_STYLES = `
+  @media (max-width: 767px) {
+    body.resource-filter-sheet-open {
+      overflow: hidden;
+    }
+
+    .blog-home_header-tabs.mobile .blog-header_tabs {
+      cursor: pointer;
+    }
+
+    .blog-home_header-tabs.mobile .w-tab-content {
+      display: none !important;
+    }
+
+    .blog-home_header-tabs.mobile.is-mobile-filter-open .w-tab-content {
+      position: fixed;
+      z-index: 10001;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      display: grid !important;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      width: 100%;
+      max-height: min(82dvh, 42rem);
+      overflow: hidden;
+      border-radius: 1rem 1rem 0 0;
+      background: #fff;
+      box-shadow: 0 -0.75rem 2.5rem rgba(0, 0, 0, 0.22);
+    }
+
+    .blog-home_header-tabs.mobile.is-mobile-filter-open .w-tab-pane {
+      grid-row: 2;
+      min-height: 0;
+      max-height: none;
+      overflow-x: hidden;
+      overflow-y: auto;
+      padding: 0.25rem 1.25rem 1.25rem;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .resource-mobile-filter_backdrop {
+      position: fixed;
+      z-index: 10000;
+      inset: 0;
+      display: none;
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      border: 0;
+      background: rgba(0, 0, 0, 0.56);
+    }
+
+    .blog-home_header-tabs.mobile.is-mobile-filter-open
+      .resource-mobile-filter_backdrop {
+      display: block;
+    }
+
+    .resource-mobile-filter_header,
+    .resource-mobile-filter_footer {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 1.25rem;
+      background: #fff;
+    }
+
+    .resource-mobile-filter_header {
+      grid-row: 1;
+      justify-content: space-between;
+      border-bottom: 1px solid #dedede;
+    }
+
+    .resource-mobile-filter_heading {
+      margin: 0;
+      color: #111;
+      font: inherit;
+      font-size: 1.125rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .resource-mobile-filter_selected {
+      margin-left: 0.35rem;
+      color: #666;
+      font-size: 0.875rem;
+      font-weight: 400;
+    }
+
+    .resource-mobile-filter_close {
+      display: inline-flex;
+      width: 2.75rem;
+      height: 2.75rem;
+      flex: 0 0 auto;
+      align-items: center;
+      justify-content: center;
+      padding: 0;
+      border: 0;
+      border-radius: 999px;
+      background: #f1f1f1;
+      color: #111;
+      font: inherit;
+      font-size: 1.5rem;
+      line-height: 1;
+    }
+
+    .resource-mobile-filter_footer {
+      grid-row: 3;
+      border-top: 1px solid #dedede;
+      padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .resource-mobile-filter_clear,
+    .resource-mobile-filter_done {
+      min-height: 3rem;
+      border: 1px solid #8b1523;
+      border-radius: 0.25rem;
+      font: inherit;
+      font-weight: 700;
+    }
+
+    .resource-mobile-filter_clear {
+      flex: 0 0 auto;
+      padding: 0.75rem 1rem;
+      background: #fff;
+      color: #8b1523;
+    }
+
+    .resource-mobile-filter_clear:disabled {
+      border-color: #bbb;
+      color: #888;
+      cursor: not-allowed;
+    }
+
+    .resource-mobile-filter_done {
+      flex: 1 1 auto;
+      padding: 0.75rem 1.25rem;
+      background: #8b1523;
+      color: #fff;
+    }
+
+    .resource-mobile-filter_close:focus-visible,
+    .resource-mobile-filter_clear:focus-visible,
+    .resource-mobile-filter_done:focus-visible {
+      outline: 3px solid #d3233a;
+      outline-offset: 2px;
+    }
+  }
+`;
+
+export function createMobileFilterSheet(doc = document) {
+  const container = doc.querySelector(".blog-home_header-tabs.mobile");
+  const menu = container?.querySelector(".w-tab-menu");
+  const content = container?.querySelector(".w-tab-content");
+  const tabs = menu ? [...menu.querySelectorAll(".blog-header_tabs")] : [];
+  const panes = content ? [...content.querySelectorAll(":scope > .w-tab-pane")] : [];
+  const view = doc.defaultView;
+  if (!container || !menu || !content || !tabs.length || !panes.length || !view) {
+    return { open: () => {}, close: () => {}, sync: () => {} };
+  }
+
+  if (!doc.getElementById("resource-mobile-filter-styles")) {
+    const styles = doc.createElement("style");
+    styles.id = "resource-mobile-filter-styles";
+    styles.textContent = MOBILE_FILTER_SHEET_STYLES;
+    doc.head.append(styles);
+  }
+
+  const backdrop = doc.createElement("button");
+  backdrop.type = "button";
+  backdrop.className = "resource-mobile-filter_backdrop";
+  backdrop.setAttribute("aria-label", "Close filters");
+
+  const header = doc.createElement("div");
+  header.className = "resource-mobile-filter_header";
+  header.innerHTML = `
+    <h2 class="resource-mobile-filter_heading">
+      <span data-resource-mobile-filter-title>Filters</span>
+      <span class="resource-mobile-filter_selected" data-resource-mobile-filter-selected></span>
+    </h2>
+    <button type="button" class="resource-mobile-filter_close" aria-label="Close filters">×</button>
+  `;
+
+  const footer = doc.createElement("div");
+  footer.className = "resource-mobile-filter_footer";
+  footer.innerHTML = `
+    <button type="button" class="resource-mobile-filter_clear">Clear filters</button>
+    <button type="button" class="resource-mobile-filter_done">Show results</button>
+  `;
+
+  content.prepend(header);
+  content.append(footer);
+  container.append(backdrop);
+
+  const title = header.querySelector("[data-resource-mobile-filter-title]");
+  const selected = header.querySelector("[data-resource-mobile-filter-selected]");
+  const closeButton = header.querySelector(".resource-mobile-filter_close");
+  const clearButton = footer.querySelector(".resource-mobile-filter_clear");
+  const doneButton = footer.querySelector(".resource-mobile-filter_done");
+  const mobileInputs = [...container.querySelectorAll('input[type="checkbox"]')];
+  let opener = null;
+
+  tabs.forEach((tab, index) => {
+    const baseLabel = tab.querySelector(".tab-content > :first-child")?.textContent.trim() ||
+      tab.getAttribute("data-w-tab") ||
+      `Filter ${index + 1}`;
+    tab.dataset.resourceMobileFilterLabel = baseLabel.replace(/\s+\(\d+\)$/, "");
+    tab.setAttribute("aria-haspopup", "dialog");
+    tab.setAttribute("aria-expanded", "false");
+  });
+
+  const isMobile = () =>
+    typeof view.matchMedia !== "function" || view.matchMedia("(max-width: 767px)").matches;
+
+  const activePane = () =>
+    panes.find((pane) => pane.classList.contains("w--tab-active")) || panes[0];
+
+  const sync = () => {
+    const checkedCount = mobileInputs.filter((input) => input.checked).length;
+    const pane = activePane();
+    const activeTab = tabs.find(
+      (tab) => tab.getAttribute("data-w-tab") === pane?.getAttribute("data-w-tab")
+    );
+    const activeLabel = activeTab?.dataset.resourceMobileFilterLabel || "Filters";
+    if (title) title.textContent = activeLabel;
+    if (selected) selected.textContent = checkedCount ? `${checkedCount} selected` : "";
+    if (clearButton) clearButton.disabled = checkedCount === 0;
+    const resultCount = doc.querySelector("[data-resource-count]")?.textContent.match(
+      /of\s+([\d,]+)\s+resource/i
+    )?.[1];
+    if (doneButton) {
+      doneButton.textContent = resultCount ? `Show ${resultCount} results` : "Show results";
+    }
+  };
+
+  const open = (tab) => {
+    if (!isMobile()) return;
+    opener = tab || doc.activeElement;
+    container.classList.add("is-mobile-filter-open");
+    doc.body.classList.add("resource-filter-sheet-open");
+    content.setAttribute("role", "dialog");
+    content.setAttribute("aria-modal", "true");
+    content.setAttribute("aria-label", "Resource filters");
+    tabs.forEach((candidate) =>
+      candidate.setAttribute("aria-expanded", String(candidate === tab))
+    );
+    sync();
+    view.setTimeout(() => closeButton?.focus(), 0);
+  };
+
+  const close = () => {
+    if (!container.classList.contains("is-mobile-filter-open")) return;
+    container.classList.remove("is-mobile-filter-open");
+    doc.body.classList.remove("resource-filter-sheet-open");
+    content.removeAttribute("role");
+    content.removeAttribute("aria-modal");
+    content.removeAttribute("aria-label");
+    tabs.forEach((tab) => tab.setAttribute("aria-expanded", "false"));
+    opener?.focus?.();
+  };
+
+  menu.addEventListener("click", (event) => {
+    const tab = event.target.closest?.(".blog-header_tabs");
+    if (!tab || !isMobile()) return;
+    view.setTimeout(() => open(tab), 0);
+  });
+  closeButton?.addEventListener("click", close);
+  doneButton?.addEventListener("click", close);
+  backdrop.addEventListener("click", close);
+  clearButton?.addEventListener("click", () => {
+    const checked = mobileInputs.filter((input) => input.checked);
+    checked.forEach((input) => {
+      input.checked = false;
+    });
+    if (checked[0]) {
+      checked[0].dispatchEvent(new view.Event("change", { bubbles: true }));
+    }
+    sync();
+  });
+  doc.addEventListener("change", (event) => {
+    if (mobileInputs.includes(event.target)) view.setTimeout(sync, 0);
+  });
+  doc.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      close();
+      return;
+    }
+    if (event.key !== "Tab" || !container.classList.contains("is-mobile-filter-open")) {
+      return;
+    }
+    const focusable = [
+      ...content.querySelectorAll(
+        'button:not([disabled]), input:not([disabled]), [href], [tabindex]:not([tabindex="-1"])'
+      ),
+    ].filter((element) => element.getClientRects().length || view.getComputedStyle(element).display !== "none");
+    if (!focusable.length) return;
+    const first = focusable[0];
+    const last = focusable.at(-1);
+    if (event.shiftKey && doc.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && doc.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  });
+  view.addEventListener("resize", () => {
+    if (!isMobile()) close();
+  });
+  if (view.MutationObserver) {
+    const observer = new view.MutationObserver(sync);
+    panes.forEach((pane) =>
+      observer.observe(pane, { attributes: true, attributeFilter: ["class"] })
+    );
+    const resultCount = doc.querySelector("[data-resource-count]");
+    if (resultCount) observer.observe(resultCount, { childList: true, characterData: true, subtree: true });
+  }
+  sync();
+  return { open, close, sync };
+}
+
 export const normalizeFilterValue = (value) =>
   String(value || "")
     .trim()
@@ -660,6 +983,7 @@ export function createResourceLibrary(root, options = {}) {
 
 export async function initializeResourceLibraries() {
   enhanceFilterTabs(document);
+  createMobileFilterSheet(document);
   const roots = [...document.querySelectorAll("[data-resource-library]")];
   await Promise.all(
     roots.map(async (root) => {

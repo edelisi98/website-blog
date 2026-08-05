@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { JSDOM } from "jsdom";
 import {
+  createMobileFilterSheet,
   createResourceLibrary,
   enhanceFilterTabs,
   matchesFilters,
@@ -96,6 +97,41 @@ test("exposes filter state and selected counts on Webflow tab controls", () => {
   const tab = document.querySelector('[role="tab"]');
   assert.equal(tab.getAttribute("aria-expanded"), "true");
   assert.equal(tab.querySelector(".tab-content > :first-child").textContent, "Topic (1)");
+});
+
+test("opens mobile filters in a scrollable sheet and clears selections", async () => {
+  const dom = new JSDOM(`
+    <div class="blog-home_header-tabs mobile w-tabs">
+      <div class="w-tab-menu">
+        <a class="blog-header_tabs" data-w-tab="Topic"><span class="tab-content"><span>Topic</span><span>+</span></span></a>
+        <a class="blog-header_tabs" data-w-tab="Industry"><span class="tab-content"><span>Industry</span><span>+</span></span></a>
+      </div>
+      <div class="w-tab-content">
+        <div class="w-tab-pane w--tab-active" data-w-tab="Topic"><label><input type="checkbox" checked>PeopleSoft</label></div>
+        <div class="w-tab-pane" data-w-tab="Industry"><label><input type="checkbox">Healthcare</label></div>
+      </div>
+    </div>
+    <div data-resource-count>Showing 24 of 224 resources</div>
+  `, { pretendToBeVisual: true });
+  dom.window.matchMedia = () => ({ matches: true });
+  const { document } = dom.window;
+  const sheet = createMobileFilterSheet(document);
+  const topic = document.querySelector('[data-w-tab="Topic"].blog-header_tabs');
+
+  topic.click();
+  await new Promise((resolve) => dom.window.setTimeout(resolve, 0));
+  assert.equal(
+    document.querySelector(".blog-home_header-tabs.mobile").classList.contains("is-mobile-filter-open"),
+    true
+  );
+  assert.equal(document.body.classList.contains("resource-filter-sheet-open"), true);
+  assert.equal(document.querySelector("[data-resource-mobile-filter-selected]").textContent, "1 selected");
+  assert.equal(document.querySelector(".resource-mobile-filter_done").textContent, "Show 224 results");
+
+  document.querySelector(".resource-mobile-filter_clear").click();
+  assert.equal(document.querySelector('input[type="checkbox"]').checked, false);
+  sheet.close();
+  assert.equal(document.body.classList.contains("resource-filter-sheet-open"), false);
 });
 
 test("renders 24 cards, filters, chips, clears, and loads more", async () => {
