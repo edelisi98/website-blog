@@ -117,6 +117,10 @@ test("opens mobile filters in a scrollable sheet and clears selections", async (
   const { document } = dom.window;
   const sheet = createMobileFilterSheet(document);
   const topic = document.querySelector('[data-w-tab="Topic"].blog-header_tabs');
+  const mobileStyles = document.querySelector("#resource-mobile-filter-styles").textContent;
+
+  assert.match(mobileStyles, /transform: translate\(-50%, -50%\)/);
+  assert.match(mobileStyles, /flex-wrap: wrap/);
 
   topic.click();
   await new Promise((resolve) => dom.window.setTimeout(resolve, 0));

@@ -20,17 +20,18 @@ const MOBILE_FILTER_SHEET_STYLES = `
     .blog-home_header-tabs.mobile.is-mobile-filter-open .w-tab-content {
       position: fixed;
       z-index: 10001;
-      right: 0;
-      bottom: 0;
-      left: 0;
+      top: 50%;
+      left: 50%;
       display: grid !important;
       grid-template-rows: auto minmax(0, 1fr) auto;
-      width: 100%;
-      max-height: min(82dvh, 42rem);
+      width: calc(100% - 2rem);
+      max-width: 32rem;
+      max-height: min(80dvh, 42rem);
       overflow: hidden;
-      border-radius: 1rem 1rem 0 0;
+      border-radius: 1rem;
       background: #fff;
-      box-shadow: 0 -0.75rem 2.5rem rgba(0, 0, 0, 0.22);
+      box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.28);
+      transform: translate(-50%, -50%);
     }
 
     .blog-home_header-tabs.mobile.is-mobile-filter-open .w-tab-pane {
@@ -42,6 +43,20 @@ const MOBILE_FILTER_SHEET_STYLES = `
       padding: 0.25rem 1.25rem 1.25rem;
       overscroll-behavior: contain;
       -webkit-overflow-scrolling: touch;
+    }
+
+    .blog-home_header-tabs.mobile.is-mobile-filter-open .w-tab-pane,
+    .blog-home_header-tabs.mobile.is-mobile-filter-open .w-dyn-list,
+    .blog-home_header-tabs.mobile.is-mobile-filter-open .w-dyn-items,
+    .blog-home_header-tabs.mobile.is-mobile-filter-open .w-dyn-item,
+    .blog-home_header-tabs.mobile.is-mobile-filter-open .blog-sort_filters {
+      max-width: 100%;
+      box-sizing: border-box;
+    }
+
+    .blog-home_header-tabs.mobile.is-mobile-filter-open .blog-sort_filters {
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
 
     .blog-home_header-tabs.mobile.is-mobile-filter-open
@@ -120,6 +135,36 @@ const MOBILE_FILTER_SHEET_STYLES = `
       grid-row: 3;
       border-top: 1px solid #dedede;
       padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .active-fitler_container {
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+    }
+
+    .active-filter_base {
+      display: flex;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      flex: 1 1 100%;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    .active-filter_base .active-filter_item {
+      max-width: 100%;
+      min-width: 0;
+      flex: 0 1 auto;
+      box-sizing: border-box;
+    }
+
+    .active-filter_base [fs-list-element="tag-value"] {
+      max-width: 100%;
+      min-width: 0;
+      white-space: normal;
+      overflow-wrap: anywhere;
     }
 
     .resource-mobile-filter_clear,
