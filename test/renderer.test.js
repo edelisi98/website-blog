@@ -287,12 +287,22 @@ test("uses the pinned fallback when the API fails", async () => {
 test("supports the existing external Finsweet filters and Webflow chip template", async () => {
   const legacyMarkup = `
     <div>
-      <form fs-list-element="filters">
-        <label fs-list-activeclass="is-active">
-          <input type="checkbox" fs-list-value="PeopleSoft">
-          <span>PeopleSoft</span>
-        </label>
-      </form>
+      <div data-w-tab="Topic">
+        <form fs-list-element="filters">
+          <label fs-list-activeclass="is-active">
+            <input type="checkbox" fs-list-value="PeopleSoft">
+            <span>PeopleSoft</span>
+          </label>
+        </form>
+      </div>
+      <div data-w-tab="Topic">
+        <form fs-list-element="filters">
+          <label fs-list-activeclass="is-active">
+            <input type="checkbox" fs-list-value="PeopleSoft">
+            <span>PeopleSoft</span>
+          </label>
+        </form>
+      </div>
       <div fs-list-element="tag" hidden>
         <span fs-list-element="tag-field">Topic</span>
         <span fs-list-element="tag-value">Value</span>
@@ -317,7 +327,7 @@ test("supports the existing external Finsweet filters and Webflow chip template"
       </main>
     </div>`;
   const dom = new JSDOM(legacyMarkup, {
-    url: "https://www.elire.com/blog-home-overhaul-dev",
+    url: "https://www.elire.com/blog-home?topic=peoplesoft",
   });
   installDomGlobals(dom.window);
   const items = [makeItem(1), makeItem(2)];
@@ -327,23 +337,27 @@ test("supports the existing external Finsweet filters and Webflow chip template"
   const library = createResourceLibrary(root);
   await library.load();
 
-  const input = document.querySelector('[fs-list-value="PeopleSoft"]');
-  input.checked = true;
-  input.dispatchEvent(new dom.window.Event("change", { bubbles: true }));
+  const duplicateInputs = [...document.querySelectorAll('[fs-list-value="PeopleSoft"]')];
+  assert.equal(duplicateInputs.every((input) => input.checked), true);
   assert.equal(
     root.querySelector("[data-resource-count]").textContent,
     "Showing 1 of 1 resource"
   );
-  assert.equal(input.closest("label").classList.contains("is-active"), true);
+  assert.equal(
+    duplicateInputs.every((input) => input.closest("label").classList.contains("is-active")),
+    true
+  );
   const chip = document.querySelector('[fs-list-element="tag"]');
   assert.equal(chip.hidden, false);
+  assert.equal(document.querySelectorAll('[data-resource-filter-remove]').length, 1);
   assert.equal(
     chip.querySelector('[fs-list-element="tag-value"]').textContent,
     "PeopleSoft"
   );
 
   chip.querySelector('[fs-list-element="tag-remove"]').click();
-  assert.equal(input.checked, false);
+  assert.equal(duplicateInputs.every((input) => !input.checked), true);
+  assert.equal(dom.window.location.search, "");
   assert.equal(
     root.querySelector("[data-resource-count]").textContent,
     "Showing 2 of 2 resources"

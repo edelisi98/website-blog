@@ -61,6 +61,7 @@ const MOBILE_FILTER_SHEET_STYLES = `
 
     .blog-home_header-tabs.mobile.is-mobile-filter-open
       .blog-sort_filters:not(.is-active) {
+      background-color: #fff;
       color: #111;
     }
 
@@ -723,6 +724,18 @@ export function createResourceLibrary(root, options = {}) {
   const inputs = filterInputs(root);
   const view = root.ownerDocument.defaultView;
   const syncUrl = options.syncUrl !== false && view?.history && view?.location;
+  const filterIdentity = (input) =>
+    `${normalizeFilterValue(filterGroup(input))}\u0000${filterValue(input)}`;
+  const uniqueSelectedInputs = () => {
+    const seen = new Set();
+    return inputs.filter((input) => {
+      if (!input.checked) return false;
+      const identity = filterIdentity(input);
+      if (seen.has(identity)) return false;
+      seen.add(identity);
+      return true;
+    });
+  };
 
   if (syncUrl) {
     const params = new URLSearchParams(view.location.search);
@@ -742,8 +755,7 @@ export function createResourceLibrary(root, options = {}) {
     );
     const visibleQuery = search?.value.trim() || "";
     if (visibleQuery) url.searchParams.set("q", visibleQuery);
-    for (const input of inputs) {
-      if (!input.checked) continue;
+    for (const input of uniqueSelectedInputs()) {
       url.searchParams.append(
         normalizeFilterValue(filterGroup(input)),
         filterValue(input)
@@ -769,7 +781,7 @@ export function createResourceLibrary(root, options = {}) {
     template.parentElement
       ?.querySelectorAll("[data-resource-cloned-filter-tag]")
       .forEach((tag) => tag.remove());
-    const selected = inputs.filter((input) => input.checked);
+    const selected = uniqueSelectedInputs();
     if (!selected.length) {
       template.hidden = true;
       return true;
@@ -808,7 +820,8 @@ export function createResourceLibrary(root, options = {}) {
       if (!input.checked) continue;
       const group = filterGroup(input);
       if (!groups.has(group)) groups.set(group, []);
-      groups.get(group).push(filterValue(input));
+      const value = filterValue(input);
+      if (!groups.get(group).includes(value)) groups.get(group).push(value);
     }
     return groups;
   };
@@ -818,7 +831,7 @@ export function createResourceLibrary(root, options = {}) {
     if (!chipTemplate && renderFinsweetChips()) return;
     if (!chips || !chipTemplate) return;
     const fragment = document.createDocumentFragment();
-    for (const input of inputs.filter((candidate) => candidate.checked)) {
+    for (const input of uniqueSelectedInputs()) {
       const chip = cloneTemplate(chipTemplate);
       if (!chip) continue;
       chip.dataset.resourceFilterRemove = filterValue(input);
@@ -831,8 +844,7 @@ export function createResourceLibrary(root, options = {}) {
     chips.hidden = !chips.childElementCount;
   };
 
-  const selectedInputCount = () =>
-    inputs.reduce((total, input) => total + Number(input.checked), 0);
+  const selectedInputCount = () => uniqueSelectedInputs().length;
 
   const render = ({ previousShown = null } = {}) => {
     const fragment = document.createDocumentFragment();
@@ -937,13 +949,17 @@ export function createResourceLibrary(root, options = {}) {
     if (!chip) return;
     event.preventDefault();
     event.stopPropagation();
-    const input = inputs.find(
+    const matchingInputs = inputs.filter(
       (candidate) =>
-        filterGroup(candidate) === chip.dataset.resourceFilterGroup &&
+        normalizeFilterValue(filterGroup(candidate)) ===
+          normalizeFilterValue(chip.dataset.resourceFilterGroup) &&
         filterValue(candidate) === chip.dataset.resourceFilterRemove
     );
+    const input = matchingInputs[0];
     if (input) {
-      input.checked = false;
+      matchingInputs.forEach((candidate) => {
+        candidate.checked = false;
+      });
       applyFilters();
       trackResourceEvent(view, "filter_change", {
         filter_group: normalizeFilterValue(filterGroup(input)),
@@ -953,7 +969,10 @@ export function createResourceLibrary(root, options = {}) {
         result_count: filteredItems.length,
         source: "active_filter_chip",
       });
-      input.focus();
+      const visibleInput = matchingInputs.find(
+        (candidate) => candidate.getClientRects().length
+      );
+      visibleInput?.focus();
     }
   };
   root.addEventListener("click", removeFilterFromChip);
